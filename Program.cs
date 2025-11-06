@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MvcMovies2.Data;
+using MvcMovies2.Models;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MvcMovies2Context>(options =>
     options.UseSqlite("Data Source=MvcMovies2.db"));
@@ -9,6 +10,12 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    SeedData.Initialize(services);
+}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
